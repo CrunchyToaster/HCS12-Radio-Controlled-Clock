@@ -49,7 +49,7 @@ char readPortSim(void);                         // Use instead of readPort() for
 
 //***************************************************************************
 
-initLED()
+initLED();
 
 // ****************************************************************************
 // Initalize the hardware port on which the DCF77 signal is connected as input
