@@ -24,15 +24,15 @@
 #include "lcd.h"
 
 // Wrapper for LED functions
-void initLED(void)
+void initLED(void);
 void setLED(int led) {
-    asm {
-        ldb led
+    asm 
+    {   ldab led
     }
 }
 void clrLED(int led) {
-    asm {
-        ldb led
+    asm 
+    {   ldab led
     }
 }
 
