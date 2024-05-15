@@ -23,18 +23,6 @@
 #include "clock.h"
 #include "lcd.h"
 
-// Wrapper for LED functions
-void setLED(int led) {
-    asm 
-    {   ldab led
-    }
-}
-void clrLED(int led) {
-    asm 
-    {   ldab led
-    }
-}
-
 // Global variable holding the last DCF77 event
 DCF77EVENT dcf77Event = NODCF77EVENT;
 
