@@ -21,7 +21,8 @@
 
 // ****************************************************************************
 void main(void)
-{   EnableInterrupts;                           // Allow interrupts
+{   
+    EnableInterrupts;                           // Allow interrupts
 
     initLED();                                  // Initialize LEDs on port B
     initLCD();                                  // Initialize LCD display
@@ -30,19 +31,18 @@ void main(void)
     initTicker();                               // Initialize the time ticker
 
     for(;;)                                     // Endless loop
-    {   if (clockEvent != NOCLOCKEVENT)         // Process clock event
-        {   processEventsClock(clockEvent);
-
+    {   
+        if (clockEvent != NOCLOCKEVENT)         // Process clock event
+        {   
+            processEventsClock(clockEvent);
             displayTimeClock();
-
-            clockEvent=NOCLOCKEVENT;            // Reset clock event
+            clockEvent = NOCLOCKEVENT;          // Reset clock event
         }
 
         if (dcf77Event != NODCF77EVENT)         // Process DCF77 events
-        {   processEventsDCF77(dcf77Event);
-
+        {   
+            processEventsDCF77(dcf77Event);
             displayDateDcf77();
-
             dcf77Event = NODCF77EVENT;          // Reset dcf77 event
         }
     }

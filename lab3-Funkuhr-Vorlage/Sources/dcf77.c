@@ -8,8 +8,8 @@
 */
 
 /*
-; A C H T U N G:  D I E S E  S O F T W A R E  I S T  U N V O L L S T Ä N D I G
-; Dieses Modul enthält nur Funktionsrahmen, die von Ihnen ausprogrammiert werden
+; A C H T U N G:  D I E S E  S O F T W A R E  I S T  U N V O L L S T ï¿½ N D I G
+; Dieses Modul enthï¿½lt nur Funktionsrahmen, die von Ihnen ausprogrammiert werden
 ; sollen.
 */
 
@@ -40,9 +40,16 @@ char readPortSim(void);                         // Use instead of readPort() for
 // Returns:     -
 void initializePort(void)
 {
-// --- Add your code here ----------------------------------------------------
-// --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? ---
+    // Configure Port H.0 as input
+    DDRH &= ~(0x01); // Clear bit 0 of DDRH to set PH0 as input
+    
+    // Enable pull-up resistor on Port H.0 if required
+    PERH |= 0x01;    // Set bit 0 of PERH to enable pull-up resistor on PH0
+
+    // Configure Port B.0, B.1, B.2, and B.3 as output for LEDs
+    DDRB |= 0x0F;    // Set lower nibble (bits 0-3) of DDRB to configure PB0-PB3 as output
 }
+
 
 // ****************************************************************************
 // Read the hardware port on which the DCF77 signal is connected as input
@@ -50,10 +57,14 @@ void initializePort(void)
 // Returns:     0 if signal is Low, >0 if signal is High
 char readPort(void)
 {
-// --- Add your code here ----------------------------------------------------
-// --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? ---
-    return -1;
+    // Read the value of Port H.0
+    if (PTH & 0x01) {
+        return 1; // Signal is High
+    } else {
+        return 0; // Signal is Low
+    }
 }
+
 
 // ****************************************************************************
 //  Initialize DCF77 module
@@ -77,18 +88,51 @@ void displayDateDcf77(void)
 }
 
 // ****************************************************************************
-//  Read and evaluate DCF77 signal and detect events
-//  Must be called by user every 10ms
-//  Parameter:  Current CPU time base in milliseconds
-//  Returns:    DCF77 event, i.e. second pulse, 0 or 1 data bit or minute marker
+// Read and evaluate DCF77 signal and detect events
+// Must be called by user every 10ms
+// Parameter:  Current CPU time base in milliseconds
+// Returns:    DCF77 event, i.e. second pulse, 0 or 1 data bit or minute marker
 DCF77EVENT sampleSignalDCF77(int currentTime)
-{   DCF77EVENT event = NODCF77EVENT;
+{
+    static char lastSignal = 0;
+    static int lastTime = 0;
+    DCF77EVENT event = NODCF77EVENT;
 
-// --- Add your code here ----------------------------------------------------
-// --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? --- ??? ---
+    char signal = readPort();  // Read current signal state
+
+    // Detect edges and measure pulse lengths
+    if (signal != lastSignal) {
+        if (signal == 0) {
+            // Falling edge detected
+            int pulseLength = currentTime - lastTime;
+            if (pulseLength >= 900 && pulseLength <= 1100) {
+                event = VALIDSECOND;
+            } else if (pulseLength >= 1900 && pulseLength <= 2100) {
+                event = VALIDMINUTE;
+            }
+        } else {
+            // Rising edge detected
+            int lowLength = currentTime - lastTime;
+            if (lowLength >= 70 && lowLength <= 130) {
+                event = VALIDZERO;
+            } else if (lowLength >= 170 && lowLength <= 230) {
+                event = VALIDONE;
+            }
+        }
+        lastTime = currentTime;
+        lastSignal = signal;
+    } else {
+        event = NODCF77EVENT;
+    }
+
+    // Toggle LED B.3 based on signal state
+    if (event != NODCF77EVENT) {
+        PORTB ^= 0x08; // Toggle PB3 (LED B.3)
+    }
 
     return event;
 }
+
 
 // ****************************************************************************
 // Process the DCF77 events
