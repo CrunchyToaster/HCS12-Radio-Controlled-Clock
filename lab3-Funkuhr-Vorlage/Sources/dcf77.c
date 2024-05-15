@@ -23,6 +23,19 @@
 #include "clock.h"
 #include "lcd.h"
 
+// Wrapper for LED functions
+void initLED(void)
+void setLED(int led) {
+    asm {
+        ldb led
+    }
+}
+void clrLED(int led) {
+    asm {
+        ldb led
+    }
+}
+
 // Global variable holding the last DCF77 event
 DCF77EVENT dcf77Event = NODCF77EVENT;
 
@@ -33,6 +46,10 @@ static int  dcf77Year=2017, dcf77Month=1, dcf77Day=1, dcf77Hour=0, dcf77Minute=0
 // a DCF77 radio signal receiver
 void initializePortSim(void);                   // Use instead of initializePort() for testing
 char readPortSim(void);                         // Use instead of readPort() for testing
+
+//***************************************************************************
+
+initLED()
 
 // ****************************************************************************
 // Initalize the hardware port on which the DCF77 signal is connected as input
@@ -99,35 +116,12 @@ DCF77EVENT sampleSignalDCF77(int currentTime)
     DCF77EVENT event = NODCF77EVENT;
 
     char signal = readPort();  // Read current signal state
-
-    // Detect edges and measure pulse lengths
     if (signal != lastSignal) {
-        if (signal == 0) {
-            // Falling edge detected
-            int pulseLength = currentTime - lastTime;
-            if (pulseLength >= 900 && pulseLength <= 1100) {
-                event = VALIDSECOND;
-            } else if (pulseLength >= 1900 && pulseLength <= 2100) {
-                event = VALIDMINUTE;
-            }
-        } else {
-            // Rising edge detected
-            int lowLength = currentTime - lastTime;
-            if (lowLength >= 70 && lowLength <= 130) {
-                event = VALIDZERO;
-            } else if (lowLength >= 170 && lowLength <= 230) {
-                event = VALIDONE;
-            }
-        }
-        lastTime = currentTime;
         lastSignal = signal;
-    } else {
-        event = NODCF77EVENT;
+        setLED(0b00000010); // Signal changed
     }
-
-    // Toggle LED B.3 based on signal state
-    if (event != NODCF77EVENT) {
-        PORTB ^= 0x08; // Toggle PB3 (LED B.3)
+    else {
+        clrLED(0b00000010); // Signal unchanged
     }
 
     return event;
