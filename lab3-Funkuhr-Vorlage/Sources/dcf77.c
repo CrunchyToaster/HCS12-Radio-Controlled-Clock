@@ -24,7 +24,6 @@
 #include "lcd.h"
 
 // Wrapper for LED functions
-void initLED(void);
 void setLED(int led) {
     asm 
     {   ldab led
@@ -46,10 +45,6 @@ static int  dcf77Year=2017, dcf77Month=1, dcf77Day=1, dcf77Hour=0, dcf77Minute=0
 // a DCF77 radio signal receiver
 void initializePortSim(void);                   // Use instead of initializePort() for testing
 char readPortSim(void);                         // Use instead of readPort() for testing
-
-//***************************************************************************
-
-initLED();
 
 // ****************************************************************************
 // Initalize the hardware port on which the DCF77 signal is connected as input
