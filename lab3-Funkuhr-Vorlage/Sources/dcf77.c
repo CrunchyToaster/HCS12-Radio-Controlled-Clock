@@ -35,6 +35,9 @@ static char dcf77Buffer[59];
 static char ERROR = 0;
 static char paritySum = 0;
 
+// Counter for for-loops
+int i = 0;
+
 // Prototypes of functions simulation DCF77 signals, when testing without
 // a DCF77 radio signal receiver
 void initializePortSim(void);                   // Use instead of initializePort() for testing
@@ -161,7 +164,6 @@ void processEventsDCF77(DCF77EVENT event)
     case VALIDMINUTE:
         if (currentBit == 58) {
             currentBit = 0;
-            int i = 0;
             // check parity
             // 21 - 27
             paritySum = 0;
