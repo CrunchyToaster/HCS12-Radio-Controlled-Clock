@@ -92,10 +92,8 @@ void initDCF77(void)
 void displayDateDcf77(void)
 {   char datum[32];
 
-    (void) sprintf(datum, "%02d.%02d.%04d", dcf77Day, dcf77Month, dcf77Year);
-
-    datum [11] = (char) currentBit;
-
+    (void) sprintf(datum, "%02d.%02d.%04d %d", dcf77Day, dcf77Month, dcf77Year, currentBit);
+    
     writeLine(datum, 1);
 }
 
