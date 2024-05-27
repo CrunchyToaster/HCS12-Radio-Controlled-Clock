@@ -164,7 +164,8 @@ void processEventsDCF77(DCF77EVENT event)
             // check parity
             // 21 - 27
             paritySum = 0;
-            for (int i = 21; i <= 28; i++) {
+            int i;
+            for (i = 21; i <= 28; i++) {
                 paritySum += dcf77Buffer[i];
             }
             if (paritySum % 2 != 0) {
@@ -173,7 +174,7 @@ void processEventsDCF77(DCF77EVENT event)
             }
             // 29 - 34
             paritySum = 0;
-            for (int i = 29; i <= 35; i++) {
+            for (i = 29; i <= 35; i++) {
                 paritySum += dcf77Buffer[i];
             }
             if (paritySum % 2 != 0) {
@@ -182,7 +183,7 @@ void processEventsDCF77(DCF77EVENT event)
             }
             // 36 - 57
             paritySum = 0;
-            for (int i = 36; i <= 58; i++) {
+            for (i = 36; i <= 58; i++) {
                 paritySum += dcf77Buffer[i];
             }
             if (paritySum % 2 != 0) {
