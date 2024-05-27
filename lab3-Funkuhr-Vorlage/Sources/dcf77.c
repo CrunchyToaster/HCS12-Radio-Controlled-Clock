@@ -251,7 +251,7 @@ void processEventsDCF77(DCF77EVENT event)
         break;
     }
 
-    if (ERROR) {
+    if (ERROR == 1) {
         // TURN ON LED B.2
         PORTB |= 0x04;
         // TURN OFF LED B.3
