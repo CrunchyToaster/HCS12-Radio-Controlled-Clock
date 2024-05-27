@@ -99,17 +99,39 @@ DCF77EVENT sampleSignalDCF77(int currentTime)
     DCF77EVENT event = NODCF77EVENT;
 
     char signal = readPort();  // Read current signal state
+
+    // Detect edges and measure pulse lengths
     if (signal != lastSignal) {
+        if (signal == 0) {
+            // Falling edge detected
+            int pulseLength = currentTime - lastTime;
+            if (pulseLength >= 900 && pulseLength <= 1100) {
+                event = VALIDSECOND;
+            } else if (pulseLength >= 1900 && pulseLength <= 2100) {
+                event = VALIDMINUTE;
+            }
+        } else {
+            // Rising edge detected
+            int lowLength = currentTime - lastTime;
+            if (lowLength >= 70 && lowLength <= 130) {
+                event = VALIDZERO;
+            } else if (lowLength >= 170 && lowLength <= 230) {
+                event = VALIDONE;
+            }
+        }
+        lastTime = currentTime;
         lastSignal = signal;
-        setLED(0b00000010); // Signal changed
+    } else {
+        event = NODCF77EVENT;
     }
-    else {
-        clrLED(0b00000010); // Signal unchanged
+
+    // Toggle LED B.3 based on signal state
+    if (event != NODCF77EVENT) {
+        PORTB ^= 0x08; // Toggle PB3 (LED B.3)
     }
 
     return event;
 }
-
 
 // ****************************************************************************
 // Process the DCF77 events
