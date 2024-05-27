@@ -161,10 +161,10 @@ void processEventsDCF77(DCF77EVENT event)
     case VALIDMINUTE:
         if (currentBit == 58) {
             currentBit = 0;
+            int i = 0;
             // check parity
             // 21 - 27
             paritySum = 0;
-            int i;
             for (i = 21; i <= 28; i++) {
                 paritySum += dcf77Buffer[i];
             }
