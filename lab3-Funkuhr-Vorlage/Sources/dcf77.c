@@ -84,7 +84,7 @@ char readPort(void)
 void initDCF77(void)
 {   
     int newHour = dcf77Hour;
-    if(EST) {newHour = (dcf77Hour - 6) % 24}
+    if(EST) {newHour = (dcf77Hour - 6) % 24;}
     setClock((char) newHour, (char) dcf77Minute, 0);
     displayDateDcf77();
 
