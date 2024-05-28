@@ -25,6 +25,7 @@ CLOCKEVENT clockEvent = NOCLOCKEVENT;
 static char hrs = 0, mins = 0, secs = 0;
 static int uptime = 0;
 static int ticks = 0;
+int newHour = dcf77Hour;
 
 // ****************************************************************************
 //  Initialize clock module
@@ -49,7 +50,6 @@ void tick10ms(void)
 
     dcf77Event = sampleSignalDCF77(uptime);     // Sample the DCF77 signal
 
-    int newHour = dcf77Hour;
     if(EST) {newHour = (dcf77Hour - 6) % 24;}
     setClock((char)newHour, (char)dcf77Minute, 0);
 
