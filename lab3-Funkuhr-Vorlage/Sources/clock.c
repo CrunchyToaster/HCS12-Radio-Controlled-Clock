@@ -25,7 +25,7 @@ CLOCKEVENT clockEvent = NOCLOCKEVENT;
 static char hrs = 0, mins = 0, secs = 0;
 static int uptime = 0;
 static int ticks = 0;
-int newHour = dcf77Hour;
+static int newHour = dcf77Hour;
 
 // ****************************************************************************
 //  Initialize clock module

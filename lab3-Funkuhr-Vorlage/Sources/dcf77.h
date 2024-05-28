@@ -13,6 +13,9 @@ typedef enum { NODCF77EVENT, VALIDZERO, VALIDONE, VALIDSECOND, VALIDMINUTE, INVA
 
 // Global variable holding the last DCF77 event
 extern DCF77EVENT dcf77Event;
+extern char EST;
+extern int dcf77Hour;
+extern int dcf77Minute;
 
 // Public functions, for details see dcf77.c
 void initDCF77(void);

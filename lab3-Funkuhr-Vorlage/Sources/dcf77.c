@@ -36,7 +36,7 @@ static char dcf77Buffer[59];
 static char ERROR = 0;
 static char paritySum = 0;
 
-static char EST = 0;
+char EST = 0;
 
 // Counter for for-loops
 int i = 0;
