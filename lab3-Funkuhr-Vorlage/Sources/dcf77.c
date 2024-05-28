@@ -27,7 +27,8 @@
 DCF77EVENT dcf77Event = NODCF77EVENT;
 
 // Modul internal global variables
-static int  dcf77Year=2017, dcf77Month=1, dcf77Day=1, dcf77Hour=0, dcf77Minute=0;       //dcf77 Date and time as integer values
+static int  dcf77Year=2017, dcf77Month=1, dcf77Day=1, dcf77Hour=0, dcf77Minute=0, dcf77Weekday=0;       //dcf77 Date and time as integer values
+static char dcf77WeekdayNames[7][4] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
 // Variables for the DCF77 state machine
 static int currentBit = 0;
@@ -92,7 +93,7 @@ void initDCF77(void)
 void displayDateDcf77(void)
 {   char datum[32];
 
-    (void) sprintf(datum, "%02d.%02d.%04d %d", dcf77Day, dcf77Month, dcf77Year, currentBit);
+    (void) sprintf(datum, "%s %02d.%02d.%04d", dcf77WeekdayNames[dcf77Weekday-1], dcf77Day, dcf77Month, dcf77Year);
     
     writeLine(datum, 1);
 }
@@ -155,6 +156,11 @@ void processEventsDCF77(DCF77EVENT event)
     {
     case VALIDSECOND:
         currentBit++;
+        if (currentBit > 58)
+        {
+            currentBit = 0;
+            ERROR = 1;
+        }
         break;
     case VALIDZERO:
         dcf77Buffer[currentBit] = 0;
@@ -232,6 +238,17 @@ void processEventsDCF77(DCF77EVENT event)
             dcf77Day += dcf77Buffer[41] * 20;
             // check if day is valid
             if (dcf77Day > 31 || dcf77Day == 0) {
+                ERROR = 1;
+                break;
+            }
+
+            // decode weekday
+            dcf77Weekday = 0;
+            dcf77Weekday += dcf77Buffer[42] * 1;
+            dcf77Weekday += dcf77Buffer[43] * 2;
+            dcf77Weekday += dcf77Buffer[44] * 4;
+            // check if weekday is valid
+            if (dcf77Weekday > 7 || dcf77Weekday == 0) {
                 ERROR = 1;
                 break;
             }
