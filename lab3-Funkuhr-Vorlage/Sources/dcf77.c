@@ -36,7 +36,7 @@ static char dcf77Buffer[59];
 static char ERROR = 0;
 static char paritySum = 0;
 
-static char EST = 0;
+static char EST = 1;
 
 // Counter for for-loops
 int i = 0;
@@ -82,7 +82,10 @@ char readPort(void)
 //  Initialize DCF77 module
 //  Called once before using the module
 void initDCF77(void)
-{   setClock((char) dcf77Hour, (char) dcf77Minute, 0);
+{   
+    int newHour = dcf77Hour;
+    if(EST) {newHour = (dcf77Hour - 6) % 24}
+    setClock((char) newHour, (char) dcf77Minute, 0);
     displayDateDcf77();
 
     initializePort();
