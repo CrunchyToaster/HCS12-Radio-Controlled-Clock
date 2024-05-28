@@ -49,6 +49,10 @@ void tick10ms(void)
 
     dcf77Event = sampleSignalDCF77(uptime);     // Sample the DCF77 signal
 
+    int newHour = dcf77Hour;
+    if(EST) {newHour = (dcf77Hour - 6) % 24;}
+    setClock((char)newHour, (char)dcf77Minute, 0);
+
     //--- Add code here, which shall be executed every 10ms -------------------
     // ???
     //--- End of user code
