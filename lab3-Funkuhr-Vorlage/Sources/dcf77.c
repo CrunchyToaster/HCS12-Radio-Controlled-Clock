@@ -27,7 +27,7 @@
 DCF77EVENT dcf77Event = NODCF77EVENT;
 
 // Modul internal global variables
-static int  dcf77Year=2017, dcf77Month=1, dcf77Day=1, dcf77Hour=0, dcf77Minute=0, dcf77Weekday=0;       //dcf77 Date and time as integer values
+static int  dcf77Year=2017, dcf77Month=1, dcf77Day=1, dcf77Hour=0, dcf77Minute=0, dcf77Weekday=1;       //dcf77 Date and time as integer values
 static char dcf77WeekdayNames[7][4] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
 // Variables for the DCF77 state machine
@@ -35,6 +35,8 @@ static int currentBit = 0;
 static char dcf77Buffer[59];
 static char ERROR = 0;
 static char paritySum = 0;
+
+static char EST = 0;
 
 // Counter for for-loops
 int i = 0;
