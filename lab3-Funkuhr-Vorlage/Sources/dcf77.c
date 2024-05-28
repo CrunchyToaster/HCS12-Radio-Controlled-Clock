@@ -115,9 +115,9 @@ DCF77EVENT sampleSignalDCF77(int currentTime)
         if (signal == 0) {
             // Falling edge detected
             int pulseLength = currentTime - lastTime;
-            if (pulseLength >= 900 && pulseLength <= 1100) {
+            if (pulseLength >= 700 && pulseLength <= 1300) {
                 event = VALIDSECOND;
-            } else if (pulseLength >= 1900 && pulseLength <= 2100) {
+            } else if (pulseLength >= 1700 && pulseLength <= 2300) {
                 event = VALIDMINUTE;
             }
         } else {
