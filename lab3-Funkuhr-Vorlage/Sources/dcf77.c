@@ -202,6 +202,11 @@ void processEventsDCF77(DCF77EVENT event)
             dcf77Minute += dcf77Buffer[25] * 10;
             dcf77Minute += dcf77Buffer[26] * 20;
             dcf77Minute += dcf77Buffer[27] * 40;
+            // check if minutes are valid
+            if (dcf77Minute > 59) {
+                ERROR = 1;
+                break;
+            }
 
             // decode hours
             dcf77Hour = 0;
@@ -211,6 +216,11 @@ void processEventsDCF77(DCF77EVENT event)
             dcf77Hour += dcf77Buffer[32] * 8;
             dcf77Hour += dcf77Buffer[33] * 10;
             dcf77Hour += dcf77Buffer[34] * 20;
+            // check if hours are valid
+            if (dcf77Hour > 23) {
+                ERROR = 1;
+                break;
+            }
 
             // decode day
             dcf77Day = 0;
@@ -220,6 +230,11 @@ void processEventsDCF77(DCF77EVENT event)
             dcf77Day += dcf77Buffer[39] * 8;
             dcf77Day += dcf77Buffer[40] * 10;
             dcf77Day += dcf77Buffer[41] * 20;
+            // check if day is valid
+            if (dcf77Day > 31 || dcf77Day == 0) {
+                ERROR = 1;
+                break;
+            }
 
             // decode month
             dcf77Month = 0;
@@ -228,6 +243,11 @@ void processEventsDCF77(DCF77EVENT event)
             dcf77Month += dcf77Buffer[47] * 4;
             dcf77Month += dcf77Buffer[48] * 8;
             dcf77Month += dcf77Buffer[49] * 10;
+            // check if month is valid
+            if (dcf77Month > 12 || dcf77Month == 0) {
+                ERROR = 1;
+                break;
+            }
 
             // decode year
             dcf77Year = 0;
@@ -240,6 +260,12 @@ void processEventsDCF77(DCF77EVENT event)
             dcf77Year += dcf77Buffer[56] * 40;
             dcf77Year += dcf77Buffer[57] * 80;
             dcf77Year += 2000;
+            // check if year is valid
+            if (dcf77Year > 2099) {
+                ERROR = 1;
+                break;
+            }
+
         } else {
             currentBit = 0;
             ERROR = 1;
