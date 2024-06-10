@@ -139,10 +139,6 @@ void initDCF77(void)
 void displayDateDcf77(void)
 {   char datum[32];
 
-    if (EST) {
-        setESTWithDCF77();
-    }
-
     (void) sprintf(datum, "%s%02d.%02d.%04d%s", EST ? dcf77WeekdayNames[estWeekday] : dcf77WeekdayNames[dcf77Weekday-1], EST ? estDay : dcf77Day, EST ? estMonth : dcf77Month, EST ? estYear : dcf77Year, EST ? "US" : "EU");
     
     writeLine(datum, 1);
