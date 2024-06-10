@@ -31,13 +31,16 @@ static int  dcf77Year=2017, dcf77Month=1, dcf77Day=1, dcf77Hour=0, dcf77Minute=0
 static char dcf77WeekdayNames[7][4] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
 // calculated EST time
-static int estYear=2017, estMonth=1, estDay=1, estHour=0, estMinute=0, estWeekday=1;
+static int estYear=2017, estMonth=1, estDay=1, estHour=0, estWeekday=1;
 
 static int monthDays[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
 
 void setESTWithDCF77(void) {
+    estYear = dcf77Year;
+    estMonth = dcf77Month;
+    estDay = dcf77Day;
+    estWeekday = dcf77Weekday;
     // calculate EST time
-    estMinute = dcf77Minute;
     estHour = dcf77Hour - 6;
     // if the hour is negative, subtract 1 from the day and set the hour to 24 - hour
     if (estHour < 0) {
@@ -140,8 +143,11 @@ void initDCF77(void)
 void displayDateDcf77(void)
 {   char datum[32];
 
+    // update EST time
+    setESTWithDCF77();
+
     (void) sprintf(datum, "%s%02d.%02d.%04d%s", EST ? dcf77WeekdayNames[estWeekday-1] : dcf77WeekdayNames[dcf77Weekday-1], EST ? estDay : dcf77Day, EST ? estMonth : dcf77Month, EST ? estYear : dcf77Year, EST ? "US" : "EU");
-    
+
     writeLine(datum, 1);
 }
 
@@ -344,7 +350,8 @@ void processEventsDCF77(DCF77EVENT event)
         // set EST time
         setESTWithDCF77();
 
-        setClock((char) EST ? estHour : dcf77Hour, (char) dcf77Minute, 0);
+        setClock(EST ? (char) estHour : (char) dcf77Hour, (char) dcf77Minute, 0);
+
         break;
     case INVALID:
         ERROR = 1;
