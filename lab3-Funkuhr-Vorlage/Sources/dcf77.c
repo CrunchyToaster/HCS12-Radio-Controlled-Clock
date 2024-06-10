@@ -53,6 +53,7 @@ void setESTWithDCF77(void) {
             estMonth = dcf77Month - 1;
             // if the month goes below 1, go to the last month of the previous year
             if (estMonth == 0) {
+                estMonth = 12;
                 estYear = dcf77Year - 1;
                 estDay = monthDays[11];
             // if the month is February, set the day to 28 and check for leap year
@@ -139,11 +140,7 @@ void initDCF77(void)
 void displayDateDcf77(void)
 {   char datum[32];
 
-    if (EST) {
-        setESTWithDCF77();
-    }
-
-    (void) sprintf(datum, "%s%02d.%02d.%04d%s", EST ? dcf77WeekdayNames[estWeekday] : dcf77WeekdayNames[dcf77Weekday-1], EST ? estDay : dcf77Day, EST ? estMonth : dcf77Month, EST ? estYear : dcf77Year, EST ? "US" : "EU");
+    (void) sprintf(datum, "%s%02d.%02d.%04d%s", EST ? dcf77WeekdayNames[estWeekday-1] : dcf77WeekdayNames[dcf77Weekday-1], EST ? estDay : dcf77Day, EST ? estMonth : dcf77Month, EST ? estYear : dcf77Year, EST ? "US" : "EU");
     
     writeLine(datum, 1);
 }
@@ -343,6 +340,10 @@ void processEventsDCF77(DCF77EVENT event)
             break;
         }
         ERROR = 0;
+
+        // set EST time
+        setESTWithDCF77();
+
         setClock((char) EST ? estHour : dcf77Hour, (char) dcf77Minute, 0);
         break;
     case INVALID:
