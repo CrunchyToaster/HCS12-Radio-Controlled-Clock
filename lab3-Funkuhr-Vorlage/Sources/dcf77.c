@@ -33,7 +33,7 @@ static char dcf77WeekdayNames[7][4] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
 // Variables for the DCF77 state machine
 static int currentBit = 0;
 static char dcf77Buffer[59];
-static char ERROR = 0;
+static char ERROR = 1;
 static char paritySum = 0;
 
 char EST = 0;
@@ -124,6 +124,8 @@ DCF77EVENT sampleSignalDCF77(int currentTime)
                 event = VALIDSECOND;
             } else if (pulseLength >= 1700 && pulseLength <= 2300) {
                 event = VALIDMINUTE;
+            } else {
+                event = INVALID;
             }
         } else {
             // Rising edge detected
@@ -132,6 +134,8 @@ DCF77EVENT sampleSignalDCF77(int currentTime)
                 event = VALIDZERO;
             } else if (lowLength >= 170 && lowLength <= 230) {
                 event = VALIDONE;
+            } else {
+                event = INVALID;
             }
         }
         lastTime = currentTime;
@@ -294,6 +298,9 @@ void processEventsDCF77(DCF77EVENT event)
         }
         ERROR = 0;
         setClock((char) dcf77Hour, (char) dcf77Minute, 0);
+        break;
+    case INVALID:
+        ERROR = 1;
         break;
     default:
         break;
