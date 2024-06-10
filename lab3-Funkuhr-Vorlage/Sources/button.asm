@@ -11,7 +11,6 @@
 ; Import symbols
     XREF EST
     XREF delay_0_5_sec
-    XREF setESTWithDCF77
 ; RAM: Variable data section
 .data: SECTION
 
@@ -47,7 +46,6 @@ changeMode:
     STAB EST
     
     JSR delay_0_5_sec ; Prevents fast toggling
-    JSR setESTWithDCF77 ; Set time with DCF77 signal
 
     PULD
     RTS
