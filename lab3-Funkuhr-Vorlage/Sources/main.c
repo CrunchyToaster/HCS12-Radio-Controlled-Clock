@@ -19,6 +19,8 @@
 
 #pragma LINK_INFO DERIVATIVE "mc9s12dp256b"
 
+void checkButtons(void);
+
 // ****************************************************************************
 void main(void)
 {   
@@ -45,6 +47,8 @@ void main(void)
             displayDateDcf77();
             dcf77Event = NODCF77EVENT;          // Reset dcf77 event
         }
+
+        checkButtons();                          // Check the button
     }
 }
 
