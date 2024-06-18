@@ -19,7 +19,3 @@ void initDCF77(void);
 void displayDateDcf77(void);
 DCF77EVENT sampleSignalDCF77(int currentTime);
 void processEventsDCF77(DCF77EVENT event);
-
-
-
-
