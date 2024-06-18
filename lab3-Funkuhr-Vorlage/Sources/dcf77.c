@@ -36,12 +36,13 @@ static char dcf77WeekdayNames[7][4] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
 static int estYear=2017, estMonth=1, estDay=1, estHour=0, estWeekday=1;
 static int monthDays[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
 
-// **************************************************************************** 
-// This function sets the estyear, estmonth, estday, estweekday and esthour
-// with the values of the dcf77Year, dcf77Month, dcf77Day, dcf77Weekday and dcf77Hour
-// and calculates the EST time
+// *******************************************************************
+// internal function: setESTWithDCF77 ... This function sets the estyear, 
+// estmonth, estday, estweekday and esthour as well as esthour
 // Parameter:   -
 // Returns:     -
+// Note:        It uses the dcf77 values for calculation. 
+//              Thus they must be set correctly.
 void setESTWithDCF77(void) {
     estYear = dcf77Year;
     estMonth = dcf77Month;
@@ -158,12 +159,14 @@ void displayDateDcf77(void)
     writeLine(datum, 1);
 }
 
-// ****************************************************************************
-// Read and evaluate DCF77 signal and detect events
-// Must be called by user every 10ms
-// If the signal is low, the function will toggle LED B.1
+// *******************************************************************
+// Public function: sampleSignalDCF77 ... Read and evaluate 
+// DCF77 signal and detect events
 // Parameter:  Current CPU time base in milliseconds
-// Returns:    DCF77 event, i.e. second pulse, 0 or 1 data bit or minute marker
+// Returns:    DCF77 event, i.e. second pulse, 0 or 1 data 
+//             bit or minute marker
+// Note:       Must be called by user every 10ms
+//             If the signal is low, the function will toggle LED B.1
 DCF77EVENT sampleSignalDCF77(int currentTime)
 {
     static char lastSignal = 0;
@@ -209,17 +212,22 @@ DCF77EVENT sampleSignalDCF77(int currentTime)
     return event;
 }
 
-// ****************************************************************************
-// Process the DCF77 events and decode the time and date
-// Must be called by user after sampleSignalDCF77().
-// On error (Invalid data or parity) the error flag is set
-// and the error LED B.2 is turned on and the time and date is not updated
-// On valid data the error flag is cleared and the error LED B.2 is turned off, LED B.3 is turned on and the time and date is updated
-// It also uses the EST flag to correctly display the time for the
-// European and US time zones.
+// ********************************************************************
+// Public function: processEventsDCF77 ... Process the DCF77 
+// events and decode the time and date
+
 // Contains the DCF77 state machine
 // Parameter:   Result of sampleSignalDCF77 as parameter
 // Returns:     -
+// Note:        Must be called by user after sampleSignalDCF77().
+//              On error (Invalid data or parity) the error flag is set
+//              and the error LED B.2 is turned on and the time and date 
+//              is not updated.
+//              On valid data the error flag is cleared and 
+//              the error LED B.2 is turned off, 
+//              LED B.3 is turned on and the time and date is updated
+//              It also uses the EST flag to correctly display 
+//              the time for the European and US time zones.
 void processEventsDCF77(DCF77EVENT event)
 {
 // --- Add your code here ----------------------------------------------------
